@@ -35,3 +35,12 @@ Use the helper script to create a property in Paradera, Aruba with a couple of r
 ```bash
 python scripts/generate_test_data.py
 ```
+
+## API Endpoints
+
+The API exposes basic CRUD-style operations for hosts, properties, rooms and bookings. New in this version are endpoints for creating and listing bookings:
+
+```text
+POST /bookings       # create a booking
+GET  /bookings       # list all bookings
+```
