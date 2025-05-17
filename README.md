@@ -23,6 +23,9 @@ Install dependencies and start the FastAPI app (example using Uvicorn):
 uvicorn smart_host.interface.api:app
 ```
 
+The module also exposes a ``create_app`` function which can be used when
+embedding the application within another project.
+
 ## Generating Sample Data
 
 Use the helper script to create a property in Paradera, Aruba with a couple of rooms:
