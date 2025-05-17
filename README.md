@@ -17,10 +17,12 @@ This repository contains placeholder modules with minimal functionality.
 
 ## Running the API
 
-Install dependencies and start the FastAPI app (example using Uvicorn):
+Install dependencies and start the FastAPI app (example using Uvicorn). Since
+the code lives inside the ``src`` directory you need to include it in the
+``PYTHONPATH`` when running ``uvicorn``:
 
 ```bash
-uvicorn smart_host.interface.api:app
+PYTHONPATH=src uvicorn smart_host.interface.api:app
 ```
 
 The module also exposes a ``create_app`` function which can be used when
