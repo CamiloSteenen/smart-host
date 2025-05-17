@@ -8,8 +8,9 @@ import unittest
 sys.path.append(str(Path(__file__).resolve().parents[1] / "src"))
 
 from smart_host.domain import Host
-from smart_host.service import HostService, PropertyService
-from smart_host.infrastructure import PropertyRepository
+from datetime import date
+from smart_host.service import HostService, PropertyService, BookingService
+from smart_host.infrastructure import PropertyRepository, BookingRepository
 
 
 class HostServiceTestCase(unittest.TestCase):
@@ -28,6 +29,25 @@ class PropertyServiceTestCase(unittest.TestCase):
         result = service.to_dict(prop)
         self.assertEqual(result["name"], "Aruba House")
         self.assertEqual(result["location"], "Paradera")
+
+
+class BookingServiceTestCase(unittest.TestCase):
+    def test_create_booking(self):
+        repo = BookingRepository()
+        service = BookingService(repo)
+        check_in = date(2024, 1, 1)
+        check_out = date(2024, 1, 5)
+        booking = service.create_booking(
+            room_id=1,
+            guest_name="Bob",
+            language="nl",
+            check_in=check_in,
+            check_out=check_out,
+        )
+        result = service.to_dict(booking)
+        self.assertEqual(result["id"], 1)
+        self.assertEqual(result["guest_name"], "Bob")
+        self.assertEqual(result["language"], "nl")
 
 
 if __name__ == "__main__":

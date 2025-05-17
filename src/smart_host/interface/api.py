@@ -1,9 +1,14 @@
 """Minimal FastAPI application."""
 
 from fastapi import FastAPI
+from datetime import date
 
-from ..service import HostService, PropertyService
-from ..infrastructure import HostRepository, PropertyRepository
+from ..service import HostService, PropertyService, BookingService
+from ..infrastructure import (
+    HostRepository,
+    PropertyRepository,
+    BookingRepository,
+)
 from ..domain import Host
 
 
@@ -13,8 +18,10 @@ def create_app() -> FastAPI:
     app = FastAPI()
     repository = HostRepository()
     prop_repo = PropertyRepository()
+    booking_repo = BookingRepository()
     host_service = HostService()
     property_service = PropertyService()
+    booking_service = BookingService(booking_repo)
 
     @app.get("/hosts")
     def list_hosts() -> list[dict]:
@@ -57,6 +64,30 @@ def create_app() -> FastAPI:
         """List rooms for a property."""
         rooms = prop_repo.list_rooms(property_id)
         return [property_service.to_dict(r) for r in rooms]
+
+    @app.post("/bookings")
+    def create_booking(
+        room_id: int,
+        guest_name: str,
+        language: str,
+        check_in: date,
+        check_out: date,
+    ) -> dict:
+        """Create a booking for a room."""
+        booking = booking_service.create_booking(
+            room_id,
+            guest_name,
+            language,
+            check_in,
+            check_out,
+        )
+        return booking_service.to_dict(booking)
+
+    @app.get("/bookings")
+    def list_bookings() -> list[dict]:
+        """Return all bookings."""
+        bookings = booking_service.list_bookings()
+        return [booking_service.to_dict(b) for b in bookings]
 
     return app
 
