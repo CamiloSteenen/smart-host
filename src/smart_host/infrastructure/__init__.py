@@ -1,5 +1,5 @@
 """Infrastructure layer placeholders."""
 
-from .repository import HostRepository
+from .repository import HostRepository, PropertyRepository, BookingRepository
 
-__all__ = ["HostRepository"]
+__all__ = ["HostRepository", "PropertyRepository", "BookingRepository"]
