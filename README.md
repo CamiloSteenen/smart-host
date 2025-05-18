@@ -15,6 +15,18 @@ smart-host/
 
 This repository contains placeholder modules with minimal functionality.
 
+## Dependency Management
+
+Project dependencies are listed in two places:
+
+* `pyproject.toml` - used when packaging the library or installing via tools
+  that support PEP 621.
+* `requirements.txt` - provides pinned versions for local development and CI
+  environments.
+
+The two files contain the same base dependencies, but `requirements.txt` pins
+exact versions to ensure reproducible installs.
+
 ## Running the API
 
 Install dependencies and start the FastAPI app (example using Uvicorn). Since
