@@ -42,6 +42,9 @@ The server bind address can be adjusted with the ``HOST`` and ``PORT``
 environment variables. By default the app listens on ``127.0.0.1`` and port
 ``8000``.
 
+Once the server is running open ``http://127.0.0.1:8000/chat`` in your browser
+to view the minimal chat interface.
+
 ### Environment Variables
 
 * ``HOST`` - network interface Uvicorn binds to (default ``127.0.0.1``)

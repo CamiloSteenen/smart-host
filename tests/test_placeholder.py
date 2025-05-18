@@ -27,9 +27,16 @@ class FakePropertyRepository:
         return list(self.properties)
 
     def add_room(
-        self, property_id: int, beds: int = 1, *, features: str | None = None, price: float = 0.0
+        self,
+        property_id: int,
+        beds: int = 1,
+        *,
+        features: str | None = None,
+        price: float = 0.0,
     ) -> Room:
-        return Room(id=1, property_id=property_id, beds=beds, features=features, price=price)
+        return Room(
+            id=1, property_id=property_id, beds=beds, features=features, price=price
+        )
 
     def list_rooms(self, property_id: int) -> list[Room]:
         return []
@@ -58,6 +65,8 @@ fake_infra.BookingRepository = FakeBookingRepository
 fake_infra.HostRepository = lambda *a, **k: None
 fake_infra.init_db = lambda: None
 sys.modules["smart_host.infrastructure"] = fake_infra
+
+PropertyRepository = FakePropertyRepository
 
 from smart_host.service import HostService, PropertyService, BookingService
 
@@ -122,7 +131,9 @@ class APIBookingValidationTestCase(unittest.TestCase):
         app = create_app()
 
         create_booking = next(
-            route.endpoint for route in app.router.routes if route.path == "/bookings" and "POST" in route.methods
+            route.endpoint
+            for route in app.router.routes
+            if route.path == "/bookings" and "POST" in route.methods
         )
 
         with self.assertRaises(HTTPException) as ctx:
@@ -135,6 +146,7 @@ class APIBookingValidationTestCase(unittest.TestCase):
             )
 
         self.assertEqual(ctx.exception.status_code, 400)
+
 
 if __name__ == "__main__":
     unittest.main()
