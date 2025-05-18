@@ -25,6 +25,16 @@ the code lives inside the ``src`` directory you need to include it in the
 PYTHONPATH=src uvicorn smart_host.interface.api:app
 ```
 
+
+The server bind address can be adjusted with the ``HOST`` and ``PORT``
+environment variables. By default the app listens on ``127.0.0.1`` and port
+``8000``.
+
+### Environment Variables
+
+* ``HOST`` - network interface Uvicorn binds to (default ``127.0.0.1``)
+* ``PORT`` - TCP port for the web server (default ``8000``)
+
 The module also exposes a ``create_app`` function which can be used when
 embedding the application within another project.
 
