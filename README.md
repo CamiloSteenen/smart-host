@@ -30,7 +30,9 @@ embedding the application within another project.
 
 ## Generating Sample Data
 
-Use the helper script to create a property in Paradera, Aruba with a couple of rooms:
+Run the helper script to populate ``smart_host.db`` with a few example hosts,
+one property and two rooms. The script is idempotent so it can be executed
+multiple times without duplicating entries.
 
 ```bash
 python scripts/generate_test_data.py
