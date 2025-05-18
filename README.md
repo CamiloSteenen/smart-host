@@ -54,3 +54,18 @@ The API exposes basic CRUD-style operations for hosts, properties, rooms and boo
 POST /bookings       # create a booking
 GET  /bookings       # list all bookings
 ```
+
+## Docker
+
+Build and run the application inside a container:
+
+```bash
+docker build -t smart-host .
+docker run --rm -p 8000:8000 smart-host
+```
+
+Alternatively, use the provided compose file:
+
+```bash
+docker-compose up
+```
