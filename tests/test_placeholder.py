@@ -11,6 +11,8 @@ from smart_host.domain import Host
 from datetime import date
 from smart_host.service import HostService, PropertyService, BookingService
 from smart_host.infrastructure import PropertyRepository, BookingRepository
+from smart_host.interface import create_app
+from fastapi import HTTPException
 
 
 class HostServiceTestCase(unittest.TestCase):
@@ -48,6 +50,50 @@ class BookingServiceTestCase(unittest.TestCase):
         self.assertEqual(result["id"], 1)
         self.assertEqual(result["guest_name"], "Bob")
         self.assertEqual(result["language"], "nl")
+
+
+class ApiErrorHandlingTestCase(unittest.TestCase):
+    def setUp(self):
+        app = create_app()
+        self.add_room_endpoint = [
+            r.endpoint
+            for r in app.routes
+            if r.path == "/properties/{property_id}/rooms" and "POST" in r.methods
+        ][0]
+        self.add_property_endpoint = [
+            r.endpoint
+            for r in app.routes
+            if r.path == "/properties" and "POST" in r.methods
+        ][0]
+        self.create_booking_endpoint = [
+            r.endpoint
+            for r in app.routes
+            if r.path == "/bookings" and "POST" in r.methods
+        ][0]
+
+    def test_add_room_invalid_property(self):
+        with self.assertRaises(HTTPException) as ctx:
+            self.add_room_endpoint(property_id=999)
+        self.assertEqual(ctx.exception.status_code, 400)
+        self.assertIn("does not exist", ctx.exception.detail)
+
+    def test_create_booking_invalid_dates(self):
+        # create property and room first
+        prop = self.add_property_endpoint(name="Prop", location="Here")
+        prop_id = prop["id"]
+        room = self.add_room_endpoint(property_id=prop_id)
+        room_id = room["id"]
+
+        with self.assertRaises(HTTPException) as ctx:
+            self.create_booking_endpoint(
+                room_id=room_id,
+                guest_name="Bob",
+                language="en",
+                check_in=date(2024, 1, 5),
+                check_out=date(2024, 1, 1),
+            )
+        self.assertEqual(ctx.exception.status_code, 400)
+        self.assertIn("check_out", ctx.exception.detail)
 
 
 if __name__ == "__main__":

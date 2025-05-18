@@ -34,8 +34,23 @@ class PropertyRepository:
     def list_properties(self) -> list[Property]:
         return list(self._properties.values())
 
-    def add_room(self, property_id: int, beds: int = 1, *, features: str | None = None, price: float = 0.0) -> Room:
-        room = Room(id=self._next_room_id, property_id=property_id, beds=beds, features=features, price=price)
+    def add_room(
+        self,
+        property_id: int,
+        beds: int = 1,
+        *,
+        features: str | None = None,
+        price: float = 0.0,
+    ) -> Room:
+        if property_id not in self._properties:
+            raise ValueError(f"Property {property_id} does not exist")
+        room = Room(
+            id=self._next_room_id,
+            property_id=property_id,
+            beds=beds,
+            features=features,
+            price=price,
+        )
         self._rooms[room.id] = room
         self._next_room_id += 1
         return room
