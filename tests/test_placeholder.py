@@ -84,10 +84,13 @@ class BookingServiceTestCase(unittest.TestCase):
     def test_create_booking(self):
         repo = FakeBookingRepository()
         service = BookingService(repo)
+        prop_repo = PropertyRepository()
+        prop = prop_repo.add_property(name="Test Property", location="Nowhere")
+        room = prop_repo.add_room(property_id=prop.id)
         check_in = date(2024, 1, 1)
         check_out = date(2024, 1, 5)
         booking = service.create_booking(
-            room_id=1,
+            room_id=room.id,
             guest_name="Bob",
             language="nl",
             check_in=check_in,
