@@ -78,13 +78,19 @@ def create_app() -> FastAPI:
         check_out: date,
     ) -> dict:
         """Create a booking for a room."""
-        booking = booking_service.create_booking(
-            room_id,
-            guest_name,
-            language,
-            check_in,
-            check_out,
-        )
+        try:
+            booking = booking_service.create_booking(
+                room_id,
+                guest_name,
+                language,
+                check_in,
+                check_out,
+            )
+        except ValueError as exc:
+            from fastapi import HTTPException
+
+            raise HTTPException(status_code=400, detail=str(exc))
+
         return booking_service.to_dict(booking)
 
     @app.get("/bookings")
