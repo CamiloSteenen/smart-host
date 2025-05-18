@@ -22,6 +22,8 @@ class BookingService:
         check_out: date,
     ) -> Booking:
         """Create and persist a booking."""
+        if check_out <= check_in:
+            raise ValueError("check_out must occur after check_in")
         booking = Booking(
             id=0,
             room_id=room_id,
