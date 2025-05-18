@@ -8,6 +8,7 @@ from ..infrastructure import (
     HostRepository,
     PropertyRepository,
     BookingRepository,
+    init_db,
 )
 from ..domain import Host
 
@@ -16,6 +17,9 @@ def create_app() -> FastAPI:
     """Create and return the FastAPI application."""
 
     app = FastAPI()
+    # Ensure database tables exist
+    init_db()
+
     repository = HostRepository()
     prop_repo = PropertyRepository()
     booking_repo = BookingRepository()

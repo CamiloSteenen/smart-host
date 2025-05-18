@@ -10,7 +10,13 @@ sys.path.append(str(Path(__file__).resolve().parents[1] / "src"))
 from smart_host.domain import Host
 from datetime import date
 from smart_host.service import HostService, PropertyService, BookingService
-from smart_host.infrastructure import PropertyRepository, BookingRepository
+from smart_host.infrastructure import (
+    PropertyRepository,
+    BookingRepository,
+    init_db,
+)
+
+init_db()
 
 
 class HostServiceTestCase(unittest.TestCase):
