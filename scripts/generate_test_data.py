@@ -5,10 +5,11 @@ from pathlib import Path
 
 sys.path.append(str(Path(__file__).resolve().parents[1] / "src"))
 
-from smart_host.infrastructure import PropertyRepository
+from smart_host.infrastructure import PropertyRepository, init_db
 
 
 def main() -> None:
+    init_db()
     repo = PropertyRepository()
     aruba = repo.add_property(name="Aruba House", location="Paradera")
     repo.add_room(property_id=aruba.id, beds=2, features="Sea view", price=100.0)
