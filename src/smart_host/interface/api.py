@@ -1,6 +1,18 @@
 """Minimal FastAPI application."""
 
-from fastapi import FastAPI
+from fastapi import FastAPI, Request
+from fastapi.responses import HTMLResponse
+from pathlib import Path
+
+try:  # Optional dependency for test environment
+    from fastapi.templating import Jinja2Templates
+
+    templates = Jinja2Templates(
+        directory=str(Path(__file__).resolve().parent / "templates")
+    )
+except Exception:  # pragma: nocover
+    Jinja2Templates = None  # type: ignore
+    templates = None
 from datetime import date
 
 from ..service import HostService, PropertyService, BookingService
@@ -98,6 +110,14 @@ def create_app() -> FastAPI:
         """Return all bookings."""
         bookings = booking_service.list_bookings()
         return [booking_service.to_dict(b) for b in bookings]
+
+    @app.get("/chat", response_class=HTMLResponse)
+    def chat(request: Request):
+        """Render simple chat interface."""
+        if templates is not None:
+            return templates.TemplateResponse("chat.html", {"request": request})
+        html = (Path(__file__).resolve().parent / "templates" / "chat.html").read_text()
+        return HTMLResponse(html)
 
     return app
 
