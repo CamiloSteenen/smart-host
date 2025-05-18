@@ -1,6 +1,6 @@
 """Minimal FastAPI application."""
 
-from fastapi import FastAPI
+from fastapi import FastAPI, HTTPException
 from datetime import date
 
 from ..service import HostService, PropertyService, BookingService
@@ -56,7 +56,15 @@ def create_app() -> FastAPI:
         price: float = 0.0,
     ) -> dict:
         """Add a room to a property."""
-        room = prop_repo.add_room(property_id, beds, features=features, price=price)
+        try:
+            room = prop_repo.add_room(
+                property_id,
+                beds,
+                features=features,
+                price=price,
+            )
+        except ValueError as exc:
+            raise HTTPException(status_code=400, detail=str(exc))
         return property_service.to_dict(room)
 
     @app.get("/properties/{property_id}/rooms")
@@ -74,13 +82,16 @@ def create_app() -> FastAPI:
         check_out: date,
     ) -> dict:
         """Create a booking for a room."""
-        booking = booking_service.create_booking(
-            room_id,
-            guest_name,
-            language,
-            check_in,
-            check_out,
-        )
+        try:
+            booking = booking_service.create_booking(
+                room_id,
+                guest_name,
+                language,
+                check_in,
+                check_out,
+            )
+        except ValueError as exc:
+            raise HTTPException(status_code=400, detail=str(exc))
         return booking_service.to_dict(booking)
 
     @app.get("/bookings")
